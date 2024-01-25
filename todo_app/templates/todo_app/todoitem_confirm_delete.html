@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
 
 <h3>Delete To-do Item</h3>
@@ -8,8 +7,9 @@
 
 <form method="post">
     {% csrf_token %}
-    <input type="submit" value="Yes, Delete">
-    <input type="button" value="Cancel" onclick="location.href=`{%url 'list' todo_list.id%}`;">
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <button type="button" class="btn btn-secondary"
+        onclick="location.href=`{%url 'list' todo_list.id%}`;">Cancel</button>
 </form>
 
 {% endblock  %}

@@ -1,6 +1,9 @@
 <!-- todo_list/todo_app/templates/todo_app/todoitem_form.html -->
 {% extends "base.html" %}
 
+{% load bootstrap5 %}
+{% load static %}
+
 {% block content %}
 
 <h3>{{ title }}</h3>
@@ -9,11 +12,12 @@
     <table>
         {{ form.as_table }}
     </table>
-    <input value="Submit" type="submit">
-    <input value="Cancel" type="button" onclick="location.href=`{% url 'list' todo_list.id %}`">
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-secondary"
+        onclick="location.href=`{% url 'list' todo_list.id %}`">Cancel</button>
     {% if object %}
-    <input type="button" value="Delete this item"
-        onclick="location.href=`{% url 'item-delete' todo_list.id object.id %}`">
+    <button type="button" class="btn btn-danger"
+        onclick="location.href=`{% url 'item-delete' todo_list.id object.id %}`">Delete this item</button>
     {% endif %}
 </form>
 

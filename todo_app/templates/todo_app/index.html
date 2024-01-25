@@ -1,5 +1,6 @@
 <!-- Index -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 {% if object_list %}
@@ -14,9 +15,10 @@
     </li>
     {%empty%}
     <h4> You have no lists!</h4>
+    <br>
     {% endfor %}
 </ul>
 <p>
-    <input value="Add a new list" type="button" onclick="location.href=`{% url 'list-add'%}`">
+    <button type="button" class="btn btn-primary" onclick="location.href=`{% url 'list-add'%}`">Add a new list</button>
 </p>
 {% endblock  %}

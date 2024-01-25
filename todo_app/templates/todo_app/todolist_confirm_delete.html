@@ -8,8 +8,7 @@
 
 <form method="post">
     {% csrf_token %}
-    <input value="Yes, Delete" type="submit">
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
 </form>
-<input value="Cancel" type="button" onclick="location.href=`{%url 'index' %}`">
-
+<button class="btn btn-secondary" onclick="location.href=`{%url 'index' %}`">Cancel</button>
 {% endblock  %}
