@@ -1,23 +1,24 @@
 <!-- todo_list/todo_app/templates/todo_app/todo_list.html -->
 {% extends "base.html" %}
 {% block content %}
-<div>
-    <div>
+<div class="container">
+    <div class="row">
         <div>
             <h3>Edit list:</h3>
-            {% comment %} <h5>{{ todo_list.title | upper }}</h5> {% endcomment %}
         </div>
-        <div class="card" style="width: 18rem;">
+        <div class="card col-sm-6">
             <div class="card-body">
-                <h5>{{ todo_list.title | upper }}</h5>
-
+                <h5><b>List navn: {{ todo_list.title | upper }}</b></h5>
                 <ul>
                     {% for todo in object_list %}
                     <li>
                         <div>
                             <a onclick="location.href='{% url 'item-update' todo_list.id todo.id %}'">
-                                {{ todo.title }}
-                                (Due {{ todo.due_date | date:"l, F j"}})
+                                <br>
+                                Title: {{ todo.title }}
+                                <br>
+                                Description: {{ todo.description }}
+                                {% comment %} (Due {{ todo.due_date | date:"l, F j"}}) {% endcomment %}
                             </a>
                         </div>
                     </li>
@@ -28,14 +29,14 @@
 
             </div>
         </div>
-
-        <p>
-            <button type="button" class="btn btn-primary"
-                onclick="location.href=`{% url 'item-add' todo_list.id %}`">Add a new item</button>
-            <button type="button" class="btn btn-danger"
-                onclick="location.href=`{%url 'list-delete' todo_list.id%}`">Delete this
-                list</button>
-        </p>
+        <div class="col-sm-6">
+            <button type="button" class="btn btn-primary btn-lg"
+                onclick="location.href=`{% url 'item-add' todo_list.id %}`">Add New Item</button>
+            <br>
+            <button type="button" class="btn btn-danger btn-lg"
+                onclick="location.href=`{%url 'list-delete' todo_list.id%}`">Delete This
+                List</button>
+        </div>
     </div>
 </div>
 {% endblock %}
