@@ -11,13 +11,23 @@ class ListListView(ListView):
 class ItemListView(ListView):
     model = ToDoItem
     template_name = "todo_app/todo_list.html"
+    context_object_name = "todo_list"
 
     def get_queryset(self):
         return ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
 
-    def get_context_data(self):
-        context = super().get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context["todo_list"] = ToDoList.objects.get(id=self.kwargs["list_id"])
+        context["todos_todo"] = ToDoItem.objects.filter(
+            todo_list_id=self.kwargs["list_id"], status="To Do"
+        )
+        context["todos_in_progress"] = ToDoItem.objects.filter(
+            todo_list_id=self.kwargs["list_id"], status="In Progress"
+        )
+        context["todos_done"] = ToDoItem.objects.filter(
+            todo_list_id=self.kwargs["list_id"], status="Done"
+        )
         return context
 
 

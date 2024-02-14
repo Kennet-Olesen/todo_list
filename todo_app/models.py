@@ -25,6 +25,13 @@ class ToDoItem(models.Model):
     due_date = models.DateTimeField(default=one_week_hence)
     todo_list = models.ForeignKey(ToDoList, on_delete=models.CASCADE)
 
+    STATUS_CHOICES = [
+        ("ToDo", "To Do"),
+        ("InProgress", "In Progress"),
+        ("Done", "Done"),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="ToDo")
+
     def get_absolute_url(self):
         return reverse("item-update", args=[str(self.todo_list.id), str(self.id)])
 
