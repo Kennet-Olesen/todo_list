@@ -1,6 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import ToDoList, ToDoItem
 from django.urls import reverse, reverse_lazy
+from django.http import JsonResponse
 
 
 class ListListView(ListView):
@@ -116,3 +117,22 @@ class ItemDelete(DeleteView):
         context = super().get_context_data(**kwargs)
         context["todo_list"] = self.object.todo_list
         return context
+
+
+def update_status(request):
+    if request.method == "POST" and request.is_ajax():
+        card_id = request.POST.get("card_id")
+        new_status = request.POST.get("new_status")
+
+        # Opdater status for den tilsvarende opgave i databasen
+        try:
+            todo_item = ToDoItem.objects.get(id=card_id)
+            todo_item.status = new_status
+            todo_item.save()
+            return JsonResponse({"success": True})
+        except ToDoItem.DoesNotExist:
+            return JsonResponse(
+                {"success": False, "error": "Task not found"}, status=404
+            )
+
+    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)

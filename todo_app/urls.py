@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import update_status
 
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
         views.ItemDelete.as_view(),
         name="item-delete",
     ),
+    path("update-status/", update_status, name="update-status"),
 ]
