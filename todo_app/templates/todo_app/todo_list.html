@@ -16,9 +16,9 @@
             <div class="card-header bg-primary text-white">
                 To Do
             </div>
-            <div class="card-body">
-                {% for todo in object_list %}
-                <div class="card mb-3">
+            <div class="card-body droppable" data-status="ToDo">
+                {% for todo in todos_in_todo %}
+                <div class="card mb-3" data-id="{{ todo.pk }}">
                     <div class="card-body bg-light">
                         <h5 class="card-title"><b>Title:</b> {{ todo.title }}</h5>
                         <p class="card-text"><b>Description:</b> {{ todo.description }}</p>
@@ -33,12 +33,12 @@
         </div>
     </div>
     <!-- In Progress Column -->
-    <div class="col-md droppable">
+    <div class="col-md ">
         <div class="card">
             <div class="card-header bg-warning">
                 In Progress
             </div>
-            <div class="card-body">
+            <div class="card-body droppable" data-status="InProgress">
                 {% if todos_in_progress %}
                 {% for todo in todos_in_progress %}
                 <div class="card mb-2">

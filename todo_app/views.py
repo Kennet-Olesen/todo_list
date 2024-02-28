@@ -2,11 +2,21 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import ToDoList, ToDoItem
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
-
+from django.db.models import Q
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 class ListListView(ListView):
     model = ToDoList
     template_name = "todo_app/index.html"
+
+
+def ItemListViewFunc(request,list_id):
+    data={}
+    data["todo_list"] = ToDoList.objects.get(id=list_id)
+    data["todos_in_todo"] = ToDoItem.objects.filter(Q(todo_list_id=list_id) & Q(status="ToDo"))
+    data["todos_in_progress"] = ToDoItem.objects.filter(Q(todo_list_id=list_id) & Q(status="InProgress"))
+    return render(request, "todo_app/todo_list.html",data)
 
 
 class ItemListView(ListView):
@@ -14,21 +24,23 @@ class ItemListView(ListView):
     template_name = "todo_app/todo_list.html"
     context_object_name = "todo_list"
 
-    def get_queryset(self):
-        return ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
+    # def get_queryset(self):
+    #     return ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["todo_list"] = ToDoList.objects.get(id=self.kwargs["list_id"])
-        context["todos_todo"] = ToDoItem.objects.filter(
-            todo_list_id=self.kwargs["list_id"], status="To Do"
-        )
-        context["todos_in_progress"] = ToDoItem.objects.filter(
-            todo_list_id=self.kwargs["list_id"], status="In Progress"
-        )
-        context["todos_done"] = ToDoItem.objects.filter(
-            todo_list_id=self.kwargs["list_id"], status="Done"
-        )
+        
+        # context["todos_todo"] = ToDoItem.objects.filter(
+        #     Q(todo_list_id=self.kwargs["list_id"]) & Q(status="sdfsdfdsfTo Do")
+        #         )
+        
+        # context["todos_in_progress"] = ToDoItem.objects.filter(
+        #     todo_list_id=self.kwargs["list_id"], status="In Progress"
+        # )
+        # context["todos_done"] = ToDoItem.objects.filter(
+        #     todo_list_id=self.kwargs["list_id"], status="Done"
+        # )
         return context
 
 
@@ -87,6 +99,7 @@ class ItemUpdate(UpdateView):
         "title",
         "description",
         "due_date",
+        "status",
     ]
 
     def get_context_data(self):
@@ -118,11 +131,12 @@ class ItemDelete(DeleteView):
         context["todo_list"] = self.object.todo_list
         return context
 
-
+@csrf_exempt
 def update_status(request):
-    if request.method == "POST" and request.is_ajax():
-        card_id = request.POST.get("card_id")
-        new_status = request.POST.get("new_status")
+    if request.method == "POST":
+        
+        card_id = request.POST.get("id")
+        new_status = request.POST.get("status")
 
         # Opdater status for den tilsvarende opgave i databasen
         try:

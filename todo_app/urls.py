@@ -1,11 +1,15 @@
 from django.urls import path
+
 from . import views
-from .views import update_status
 
 
 urlpatterns = [
     path("", views.ListListView.as_view(), name="index"),
-    path("list/<int:list_id>/", views.ItemListView.as_view(), name="list"),
+
+    # path("list/<int:list_id>/", views.ItemListView.as_view(), name="list"),
+
+    path("list/<int:list_id>/", views.ItemListViewFunc, name="list"),
+
     path("list/add/", views.ListCreate.as_view(), name="list-add"),
     path("list/<int:pk>&delete/", views.ListDelete.as_view(), name="list-delete"),
     path(
@@ -23,5 +27,5 @@ urlpatterns = [
         views.ItemDelete.as_view(),
         name="item-delete",
     ),
-    path("update-status/", update_status, name="update-status"),
+    path("list/update-status/", views.update_status, name="update-status"),
 ]

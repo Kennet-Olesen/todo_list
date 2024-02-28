@@ -16,6 +16,29 @@ $(function () {
 
       // Flyt det draggable kort ind i det droppable element
       draggable.appendTo(droppable);
+
+      console.log("SAVE!!!");
+
+      var moving_item_id = draggable[0].dataset.id;
+
+      console.log(moving_item_id);
+
+      var new_status = this.dataset.status;
+
+      console.log(new_status);
+
+            
+
+    $.ajax({
+      method: "POST",
+      url: "/list/update-status/",
+      data: { id: moving_item_id, status: new_status }
+    })
+      .done(function( msg ) {
+        alert( "Data Saved: " + msg );
+      });
+
+
     },
   });
 });
