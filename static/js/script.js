@@ -27,18 +27,19 @@ $(function () {
 
       console.log(new_status);
 
-            
-
-    $.ajax({
-      method: "POST",
-      url: "/list/update-status/",
-      data: { id: moving_item_id, status: new_status }
-    })
-      .done(function( msg ) {
-        alert( "Data Saved: " + msg );
+      $.ajax({
+        method: "POST",
+        url: "{% url '/list/update-status/' %}",
+        data: { id: moving_item_id, status: new_status },
+        success: function (response) {
+          // Håndter succesrespons fra serveren
+          console.log("Status updated successfully");
+        },
+        error: function (xhr, status, error) {
+          // Håndter fejl under AJAX-anmodningen
+          console.error("Error:", error);
+        },
       });
-
-
     },
   });
 });

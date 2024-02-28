@@ -6,17 +6,25 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+
 class ListListView(ListView):
     model = ToDoList
     template_name = "todo_app/index.html"
 
 
-def ItemListViewFunc(request,list_id):
-    data={}
+def ItemListViewFunc(request, list_id):
+    data = {}
     data["todo_list"] = ToDoList.objects.get(id=list_id)
-    data["todos_in_todo"] = ToDoItem.objects.filter(Q(todo_list_id=list_id) & Q(status="ToDo"))
-    data["todos_in_progress"] = ToDoItem.objects.filter(Q(todo_list_id=list_id) & Q(status="InProgress"))
-    return render(request, "todo_app/todo_list.html",data)
+    data["todos_in_todo"] = ToDoItem.objects.filter(
+        Q(todo_list_id=list_id) & Q(status="ToDo")
+    )
+    data["todos_in_progress"] = ToDoItem.objects.filter(
+        Q(todo_list_id=list_id) & Q(status="InProgress")
+    )
+    data["todos_done"] = ToDoItem.objects.filter(
+        Q(todo_list_id=list_id) & Q(status="Done")
+    )
+    return render(request, "todo_app/todo_list.html", data)
 
 
 class ItemListView(ListView):
@@ -24,23 +32,10 @@ class ItemListView(ListView):
     template_name = "todo_app/todo_list.html"
     context_object_name = "todo_list"
 
-    # def get_queryset(self):
-    #     return ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["todo_list"] = ToDoList.objects.get(id=self.kwargs["list_id"])
-        
-        # context["todos_todo"] = ToDoItem.objects.filter(
-        #     Q(todo_list_id=self.kwargs["list_id"]) & Q(status="sdfsdfdsfTo Do")
-        #         )
-        
-        # context["todos_in_progress"] = ToDoItem.objects.filter(
-        #     todo_list_id=self.kwargs["list_id"], status="In Progress"
-        # )
-        # context["todos_done"] = ToDoItem.objects.filter(
-        #     todo_list_id=self.kwargs["list_id"], status="Done"
-        # )
+
         return context
 
 
@@ -131,16 +126,17 @@ class ItemDelete(DeleteView):
         context["todo_list"] = self.object.todo_list
         return context
 
+
 @csrf_exempt
 def update_status(request):
-    if request.method == "POST":
-        
+    if request.method == "POST" and request.is_ajax():
         card_id = request.POST.get("id")
         new_status = request.POST.get("status")
 
-        # Opdater status for den tilsvarende opgave i databasen
         try:
+            # Find det tilsvarende ToDoItem i databasen
             todo_item = ToDoItem.objects.get(id=card_id)
+            # Opdater statusen for ToDoItem
             todo_item.status = new_status
             todo_item.save()
             return JsonResponse({"success": True})
@@ -148,5 +144,5 @@ def update_status(request):
             return JsonResponse(
                 {"success": False, "error": "Task not found"}, status=404
             )
-
-    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
+    else:
+        return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
