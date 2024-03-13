@@ -40,7 +40,7 @@
             </div>
             <div class="card-body droppable" data-status="InProgress">
                 {% for todo in todos_in_progress %}
-                <div class="card mb-2">
+                <div class="card mb-2" data-id="{{ todo.pk }}">
                     <div class="card-body bg-primary">
                         <h5 class="card-title">{{ todo.title }}</h5>
                         <p class="card-text">{{ todo.description }}</p>
@@ -62,7 +62,7 @@
             </div>
             <div class="card-body droppable" data-status="Done">
                 {% for todo in todos_done %}
-                <div class="card mb-2">
+                <div class="card mb-2" data-id="{{ todo.pk }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ todo.title }}</h5>
                         <p class="card-text">{{ todo.description }}</p>

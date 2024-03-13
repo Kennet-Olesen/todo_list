@@ -1,43 +1,46 @@
 $(function () {
   $(".card").draggable({
-    revert: true, // Hvis kortet ikke droppes på en droppable, går det tilbage til sin oprindelige position
-    cursor: "move", // Cursor-udseende, når kortet trækkes
-    zIndex: 1000, // Z-indekset for at sikre, at kortet er synligt, når det trækkes
-    containment: "body", // Begræns trækningen af kortet til kroppen af ​​siden
+    revert: true,
+    cursor: "move",
+    zIndex: 1000,
+    containment: "body",
   });
 
   $(".droppable").droppable({
-    accept: ".card", // Angiv, hvilke elementer der kan slippes her (kun kort)
+    accept: ".card",
     drop: function (event, ui) {
-      // Få det droppable element, der blev droppet ind i
       var droppable = $(this);
-      // Få det draggable kort, der blev sluppet
       var draggable = ui.draggable;
-
-      // Flyt det draggable kort ind i det droppable element
+      var moving_item_id = draggable.data("id");
+      console.log("moving_item_id:", moving_item_id); // Tilføj denne linje for fejlfinding
+      var new_status = droppable.data("status");
       draggable.appendTo(droppable);
-
       console.log("SAVE!!!");
 
-      var moving_item_id = draggable[0].dataset.id;
-
-      console.log(moving_item_id);
-
-      var new_status = this.dataset.status;
+      console.log("DIT ID ER: ", moving_item_id);
 
       console.log(new_status);
 
+      // AJAX-anmodning til at opdatere statussen for elementet
       $.ajax({
         method: "POST",
-        url: "{% url '/list/update-status/' %}",
+        url: "/list/update-status/",
         data: { id: moving_item_id, status: new_status },
         success: function (response) {
-          // Håndter succesrespons fra serveren
+          // Handle success response from the server
           console.log("Status updated successfully");
+          // Opdater baggrundsfarven baseret på den nye status
+          if (new_status === "Done") {
+            draggable.css("background-color", "lightgreen");
+          } else {
+            draggable.css("background-color", ""); // Tilbage til standard baggrundsfarve
+          }
         },
         error: function (xhr, status, error) {
-          // Håndter fejl under AJAX-anmodningen
+          // Handle error during AJAX request
           console.error("Error:", error);
+          console.log("Status:", status);
+          console.log("XHR:", xhr);
         },
       });
     },

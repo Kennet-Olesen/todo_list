@@ -129,20 +129,25 @@ class ItemDelete(DeleteView):
 
 @csrf_exempt
 def update_status(request):
-    if request.method == "POST" and request.is_ajax():
-        card_id = request.POST.get("id")
-        new_status = request.POST.get("status")
+    if request.method == "POST":
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            card_id = request.POST.get("id")
+            new_status = request.POST.get("status")
 
-        try:
-            # Find det tilsvarende ToDoItem i databasen
-            todo_item = ToDoItem.objects.get(id=card_id)
-            # Opdater statusen for ToDoItem
-            todo_item.status = new_status
-            todo_item.save()
-            return JsonResponse({"success": True})
-        except ToDoItem.DoesNotExist:
+            try:
+                # Find det tilsvarende ToDoItem i databasen
+                todo_item = ToDoItem.objects.get(id=card_id)
+                # Opdater statusen for ToDoItem
+                todo_item.status = new_status
+                todo_item.save()
+                return JsonResponse({"success": True})
+            except ToDoItem.DoesNotExist:
+                return JsonResponse(
+                    {"success": False, "error": "Task not found"}, status=404
+                )
+        else:
             return JsonResponse(
-                {"success": False, "error": "Task not found"}, status=404
+                {"success": False, "error": "Invalid request"}, status=400
             )
     else:
         return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
