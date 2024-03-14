@@ -2,13 +2,13 @@
 
 {% block content %}
 
-<h3>Delete List</h3>
+<h2>Er du sikker på at du vil slette denne liste: {{object.title}}</h2>
 
-<p>Are you sure you want to delete the list <i>{{object.title}}</i>?</p>
+{% comment %} <p>Are you sure you want to delete the list <b><i>{{object.title}}</i></b>?</p> {% endcomment %}
 
-<form method="post">
+<form method="post" class="pb-3">
     {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <button type="submit" class="btn btn-danger">Ja, slet</button>
 </form>
-<button class="btn btn-secondary" onclick="location.href=`{%url 'index' %}`">Cancel</button>
+<button class="btn btn-secondary" onclick="location.href=`{%url 'index' %}`">Nej</button>
 {% endblock  %}
