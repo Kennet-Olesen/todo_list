@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="row">
-    <h3 class="col-md-12">Title: {{ todo_list.title | upper }}</h3>
+    <h2 class="col-md-12">Title: {{ todo_list.title | upper }}</h2>
     <div class="row mt-3 mb-3">
         <div class="col-md-12">
             <button type="button" class="btn btn-danger btn-lg"
@@ -16,18 +16,19 @@
             <div class="card-header bg-primary text-white">
                 To Do
             </div>
-            <div class="card-body droppable" data-status="ToDo">
+            <div class="card-body droppable " data-status="ToDo">
                 {% for todo in todos_in_todo %}
-                <div class="card mb-3" data-id="{{ todo.pk }}">
-                    <div class="card-body bg-light">
-                        <h5 class="card-title"><b>Title:</b> {{ todo.title }}</h5>
+                <div class="card mb-3 " data-id="{{ todo.pk }}">
+                    <div class="card-body">
+                        <h3 class="card-title"><b>Title:</b> {{ todo.title }}</h3>
                         <p class="card-text"><b>Description:</b> {{ todo.description }}</p>
-                        <p class="card-text">End Date: {{ todo.due_date | date:"l, F j" }}</p>
+                        {% comment %} <p class="card-text">End Date: {{ todo.due_date | date:"l, F j" }}</p>
+                        {% endcomment %}
                         <a href="{% url 'item-update' todo_list.id todo.id %}" class="btn btn-info">Edit</a>
                     </div>
                 </div>
                 {% empty %}
-                <p>There are no to-do items in this list.</p>
+                {% comment %} <p>There are no to-do items in this list.</p> {% endcomment %}
                 {% endfor %}
             </div>
         </div>
@@ -38,18 +39,19 @@
             <div class="card-header bg-warning">
                 In Progress
             </div>
-            <div class="card-body droppable" data-status="InProgress">
+            <div class="card-body droppable draggable-card" data-status="InProgress">
                 {% for todo in todos_in_progress %}
                 <div class="card mb-2" data-id="{{ todo.pk }}">
-                    <div class="card-body bg-primary">
-                        <h5 class="card-title">{{ todo.title }}</h5>
-                        <p class="card-text">{{ todo.description }}</p>
-                        <p class="card-text">End Date: {{ todo.due_date | date:"l, F j" }}</p>
+                    <div class="card-body">
+                        <h3 class="card-title"><b>Title:</b> {{ todo.title }}</h3>
+                        <p class="card-text"><b>Description:</b> {{ todo.description }}</p>
+                        {% comment %} <p class="card-text">End Date: {{ todo.due_date | date:"l, F j" }}</p>
+                        {% endcomment %}
                         <a href="{% url 'item-update' todo_list.id todo.id %}" class="btn btn-info">Edit</a>
                     </div>
                 </div>
                 {% empty %}
-                <p>No tasks in this column</p>
+                {% comment %} <p>No tasks in this column</p> {% endcomment %}
                 {% endfor %}
             </div>
         </div>
@@ -60,18 +62,19 @@
             <div class="card-header bg-success text-white">
                 Done
             </div>
-            <div class="card-body droppable" data-status="Done">
+            <div class="card-body droppable draggable-card" data-status="Done">
                 {% for todo in todos_done %}
                 <div class="card mb-2" data-id="{{ todo.pk }}">
                     <div class="card-body">
-                        <h5 class="card-title">{{ todo.title }}</h5>
-                        <p class="card-text">{{ todo.description }}</p>
-                        <p class="card-text">End Date: {{ todo.due_date | date:"l, F j" }}</p>
-                        <a href="{% url 'item-update' todo_list.id todo.id %}" class="btn btn-outline-info">Edit</a>
+                        <h3 class="card-title"><b>Title:</b> {{ todo.title }}</h3>
+                        <p class="card-text"><b>Description:</b> {{ todo.description }}</p>
+                        {% comment %} <p class="card-text">End Date: {{ todo.due_date | date:"l, F j" }}</p>
+                        {% endcomment %}
+                        <a href="{% url 'item-update' todo_list.id todo.id %}" class="btn btn-info">Edit</a>
                     </div>
                 </div>
                 {% empty %}
-                <p>No tasks in this column</p>
+                {% comment %} <p>No tasks in this column</p> {% endcomment %}
                 {% endfor %}
             </div>
         </div>
@@ -79,7 +82,7 @@
     <!-- Add New Task Button -->
     <div class="col-md">
         <div class="card">
-            <div class="card-header bg-light">
+            <div class="card-header">
                 Add New Task
             </div>
             <div class="card-body">

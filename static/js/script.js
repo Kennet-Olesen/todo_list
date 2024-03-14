@@ -1,4 +1,12 @@
 $(function () {
+  $(".card").each(function () {
+    var moving_item_id = $(this).data("id");
+    var storedColor = localStorage.getItem("item_" + moving_item_id + "_color");
+    if (storedColor) {
+      $(this).css("background-color", storedColor);
+    }
+  });
+
   $(".card").draggable({
     revert: true,
     cursor: "move",
@@ -12,7 +20,6 @@ $(function () {
       var droppable = $(this);
       var draggable = ui.draggable;
       var moving_item_id = draggable.data("id");
-      console.log("moving_item_id:", moving_item_id); // Tilføj denne linje for fejlfinding
       var new_status = droppable.data("status");
       draggable.appendTo(droppable);
       console.log("SAVE!!!");
@@ -21,7 +28,6 @@ $(function () {
 
       console.log(new_status);
 
-      // AJAX-anmodning til at opdatere statussen for elementet
       $.ajax({
         method: "POST",
         url: "/list/update-status/",
@@ -32,8 +38,26 @@ $(function () {
           // Opdater baggrundsfarven baseret på den nye status
           if (new_status === "Done") {
             draggable.css("background-color", "lightgreen");
+            // Gem den nye farve i localStorage
+            localStorage.setItem(
+              "item_" + moving_item_id + "_color",
+              "lightgreen"
+            );
+          } else if (new_status === "InProgress") {
+            draggable.css("background-color", "yellow");
+            // Gem den nye farve i localStorage
+            localStorage.setItem("item_" + moving_item_id + "_color", "yellow");
+          } else if (new_status === "ToDo") {
+            draggable.css("background-color", "lightblue");
+            // Gem den nye farve i localStorage
+            localStorage.setItem(
+              "item_" + moving_item_id + "_color",
+              "lightblue"
+            );
           } else {
             draggable.css("background-color", ""); // Tilbage til standard baggrundsfarve
+            // Fjern farveoplysningen fra localStorage
+            localStorage.removeItem("item_" + moving_item_id + "_color");
           }
         },
         error: function (xhr, status, error) {

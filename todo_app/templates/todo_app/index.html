@@ -3,19 +3,19 @@
 {% load static %}
 
 {% block content %}
-{% if object_list %}
 <div class="row">
-    <div class="col-md-1 mb-4">
-        <h3>All Lists </h3>
-    </div>
     <div class="col-md-1">
-        <button type="button" class="btn btn-outline-primary btn-lg" onclick="location.href=`{% url 'list-add'%}`">Add a
+        <button type="button" class="btn btn-primary btn-lg" onclick="location.href=`{% url 'list-add'%}`">Add a
             new list</button>
+        <br><br>
     </div>
 </div>
-{% endif %}
 <div class="row">
     <div class="col-md-12 card">
+        <div class="col-md-1 mb-4">
+            <br>
+            <h2>All Lists </h2>
+        </div>
         <div class="card-body">
             <ul>
                 {% for todolist in object_list %}
